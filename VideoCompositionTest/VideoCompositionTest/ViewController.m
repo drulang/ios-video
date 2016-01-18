@@ -46,17 +46,22 @@
 
     // Add audio to composition
     [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
-    [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audio2AssetTrack.timeRange.duration) ofTrack:audio2AssetTrack atTime:audioAssetTrack.timeRange.duration error:nil];
+    
+    // second track time
+    CMTime time = audioAssetTrack.timeRange.duration;
+    time.value -= 200;
+    
+    [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audio2AssetTrack.timeRange.duration) ofTrack:audio2AssetTrack atTime:time error:nil];
     
     //
     // Fade
     //
     AVMutableAudioMix *mutableAudioMix = [AVMutableAudioMix audioMix];
 
-    AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudioTrack];
-    [mixParameters setVolumeRampFromStartVolume:1.0 toEndVolume:0.0f timeRange:CMTimeRangeMake(kCMTimeZero, CMTimeMake(5, 1))];
-    
-    mutableAudioMix.inputParameters = @[mixParameters];
+//    AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudioTrack];
+//    [mixParameters setVolumeRampFromStartVolume:1.0 toEndVolume:0.0f timeRange:CMTimeRangeMake(kCMTimeZero, CMTimeMake(5, 1))];
+//    
+//    mutableAudioMix.inputParameters = @[mixParameters];
     
     
     //
