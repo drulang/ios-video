@@ -306,6 +306,7 @@
 				71AAB9931C4D45D300679E70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
