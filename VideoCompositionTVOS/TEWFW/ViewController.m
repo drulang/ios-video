@@ -31,41 +31,36 @@
     AVMutableCompositionTrack *mutableCompositionVideoTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
     AVMutableCompositionTrack *mutableCompositionAudioTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
     
+    int numberOfLoops = 25;
+    int audioOffsetAmount = 1000;
+    
     // Assets
     AVAsset *videoAsset = [AVAsset assetWithURL:url];
-    AVAsset *video2Asset = [AVAsset assetWithURL:url];
-    
+
     // Get the  video tracks
     AVAssetTrack *videoAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    AVAssetTrack *video2AssetTrack = [[video2Asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    
     AVAssetTrack *audioAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
-    AVAssetTrack *audio2AssetTrack = [[video2Asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
-    
-    // Add them to the composition
+
+    // Add tracks to the composition
     [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero error:nil];
-    [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, video2AssetTrack.timeRange.duration) ofTrack:video2AssetTrack atTime:videoAssetTrack.timeRange.duration error:nil];
-    
-    // Add audio to composition
     [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
+
     
-    // second track time
-    CMTime time = audioAssetTrack.timeRange.duration;
-    time.value -= 200;
+    CMTimeValue durationAmount = videoAssetTrack.timeRange.duration.value;
+    CMTime currentVideoTimeMark = videoAssetTrack.timeRange.duration;
+    CMTime currentAudioTimeMark = audioAssetTrack.timeRange.duration;
+    currentAudioTimeMark.value = currentAudioTimeMark.value - audioOffsetAmount;
+
+    for (int i = 0; i < numberOfLoops; i++) {
+        NSLog(@"Inserted");
+        [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:currentVideoTimeMark error:nil];
+        [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:currentAudioTimeMark error:nil];
+
+        currentVideoTimeMark.value += durationAmount;
+        currentAudioTimeMark.value += (durationAmount - audioOffsetAmount);
+    }
     
-    [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audio2AssetTrack.timeRange.duration) ofTrack:audio2AssetTrack atTime:time error:nil];
-    
-    //
-    // Fade
-    //
-    AVMutableAudioMix *mutableAudioMix = [AVMutableAudioMix audioMix];
-    
-    //    AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudioTrack];
-    //    [mixParameters setVolumeRampFromStartVolume:1.0 toEndVolume:0.0f timeRange:CMTimeRangeMake(kCMTimeZero, CMTimeMake(5, 1))];
-    //
-    //    mutableAudioMix.inputParameters = @[mixParameters];
-    
-    
+
     //
     // Export
     //
@@ -79,7 +74,6 @@
     
     
     AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mutableComposition presetName:AVAssetExportPresetHighestQuality];
-    exporter.audioMix = mutableAudioMix;
 
     NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
     NSString *cacheFile = [cachesPath stringByAppendingPathComponent:@"newfile.mov"];
