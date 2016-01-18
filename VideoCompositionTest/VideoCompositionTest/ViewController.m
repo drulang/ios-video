@@ -37,7 +37,6 @@
     AVAssetTrack *videoAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
     AVAssetTrack *video2AssetTrack = [[video2Asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
     
-    
     AVAssetTrack *audioAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
     AVAssetTrack *audio2AssetTrack = [[video2Asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
     
@@ -49,7 +48,17 @@
     [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
     [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audio2AssetTrack.timeRange.duration) ofTrack:audio2AssetTrack atTime:audioAssetTrack.timeRange.duration error:nil];
     
+    //
+    // Fade
+    //
+    AVMutableAudioMix *mutableAudioMix = [AVMutableAudioMix audioMix];
 
+    AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudioTrack];
+    [mixParameters setVolumeRampFromStartVolume:1.0 toEndVolume:0.0f timeRange:CMTimeRangeMake(kCMTimeZero, CMTimeMake(5, 1))];
+    
+    mutableAudioMix.inputParameters = @[mixParameters];
+    
+    
     //
     // Export
     //
@@ -63,7 +72,7 @@
     
     
     AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mutableComposition presetName:AVAssetExportPresetHighestQuality];
-    
+    exporter.audioMix = mutableAudioMix;
 
     exporter.outputURL = [[[[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:@YES error:nil] URLByAppendingPathComponent:[kDateFormatter stringFromDate:[NSDate date]]] URLByAppendingPathExtension:CFBridgingRelease(UTTypeCopyPreferredTagWithClass((CFStringRef)AVFileTypeQuickTimeMovie, kUTTagClassFilenameExtension))];
     
