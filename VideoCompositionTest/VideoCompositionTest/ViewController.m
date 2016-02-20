@@ -27,7 +27,9 @@
     
     // Create the video composition track
     AVMutableCompositionTrack *mutableCompositionVideoTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
-    AVMutableCompositionTrack *mutableCompositionAudioTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *mutableCompositionAudio1Track = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *mutableCompositionAudio2Track = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    
     
     // Assets
     AVAsset *videoAsset = [AVAsset assetWithURL:url];
@@ -45,23 +47,34 @@
     [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, video2AssetTrack.timeRange.duration) ofTrack:video2AssetTrack atTime:videoAssetTrack.timeRange.duration error:nil];
 
     // Add audio to composition
-    [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
+    [mutableCompositionAudio1Track insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
     
     // second track time
     CMTime time = audioAssetTrack.timeRange.duration;
     time.value -= 200;
     
-    [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audio2AssetTrack.timeRange.duration) ofTrack:audio2AssetTrack atTime:time error:nil];
+    [mutableCompositionAudio2Track insertTimeRange:CMTimeRangeMake(kCMTimeZero, audio2AssetTrack.timeRange.duration) ofTrack:audio2AssetTrack atTime:time error:nil];
     
     //
-    // Fade
+    // Fade when from the first audio track to the second audio track
     //
     AVMutableAudioMix *mutableAudioMix = [AVMutableAudioMix audioMix];
 
-//    AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudioTrack];
-//    [mixParameters setVolumeRampFromStartVolume:1.0 toEndVolume:0.0f timeRange:CMTimeRangeMake(kCMTimeZero, CMTimeMake(5, 1))];
-//    
-//    mutableAudioMix.inputParameters = @[mixParameters];
+    // Fade out the first track
+    CMTime firstTrackStartTime = audioAssetTrack.timeRange.duration;
+    firstTrackStartTime.value -= 500;
+    
+    AVMutableAudioMixInputParameters *fadeOutFirstTrack = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudio1Track];
+    [fadeOutFirstTrack setVolumeRampFromStartVolume:1.0 toEndVolume:0.0f timeRange:CMTimeRangeMake(time, CMTimeMake(2, 1))];
+    
+    // Fade in the second track
+    CMTime secondTrackStartTime = audioAssetTrack.timeRange.duration;
+    secondTrackStartTime.value -= 500;
+    
+    AVMutableAudioMixInputParameters *fadeInSecondTrack = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudio2Track];
+    [fadeInSecondTrack setVolumeRampFromStartVolume:0 toEndVolume:1.0f timeRange:CMTimeRangeMake(secondTrackStartTime, CMTimeMake(1, 1))];
+    
+    mutableAudioMix.inputParameters = @[fadeOutFirstTrack, fadeInSecondTrack];
     
     
     //
