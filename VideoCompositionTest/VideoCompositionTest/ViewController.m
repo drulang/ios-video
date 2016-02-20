@@ -72,10 +72,9 @@
     secondTrackStartTime.value -= 500;
     
     AVMutableAudioMixInputParameters *fadeInSecondTrack = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudio2Track];
-    [fadeInSecondTrack setVolumeRampFromStartVolume:0 toEndVolume:1.0f timeRange:CMTimeRangeMake(secondTrackStartTime, CMTimeMake(1, 1))];
+    [fadeInSecondTrack setVolumeRampFromStartVolume:0 toEndVolume:1.0f timeRange:CMTimeRangeMake(secondTrackStartTime, CMTimeMake(2, 1))];
     
     mutableAudioMix.inputParameters = @[fadeOutFirstTrack, fadeInSecondTrack];
-    
     
     //
     // Export
