@@ -33,18 +33,16 @@
     
     // Assets
     AVAsset *videoAsset = [AVAsset assetWithURL:url];
-    AVAsset *video2Asset = [AVAsset assetWithURL:url];
-    
+
     // Get the  video tracks
     AVAssetTrack *videoAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    AVAssetTrack *video2AssetTrack = [[video2Asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    
+
     AVAssetTrack *audioAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
-    AVAssetTrack *audio2AssetTrack = [[video2Asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
+    AVAssetTrack *audio2AssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
     
     // Add them to the composition
     [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero error:nil];
-    [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, video2AssetTrack.timeRange.duration) ofTrack:video2AssetTrack atTime:videoAssetTrack.timeRange.duration error:nil];
+    [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:videoAssetTrack.timeRange.duration error:nil];
 
     // Add audio to composition
     [mutableCompositionAudio1Track insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
