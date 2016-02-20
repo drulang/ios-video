@@ -31,8 +31,8 @@
     AVMutableCompositionTrack *mutableCompositionVideoTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
     AVMutableCompositionTrack *mutableCompositionAudioTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
     
-    int numberOfLoops = 25;
-    int audioOffsetAmount = 1000;
+    int numberOfLoops = 10;
+    int audioOffsetAmount = 200;
     
     // Assets
     AVAsset *videoAsset = [AVAsset assetWithURL:url];
@@ -60,7 +60,6 @@
         currentAudioTimeMark.value += (durationAmount - audioOffsetAmount);
     }
     
-
     //
     // Export
     //
@@ -72,19 +71,30 @@
         kDateFormatter.timeStyle = NSDateFormatterShortStyle;
     }
     
-    
-    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mutableComposition presetName:AVAssetExportPresetHighestQuality];
+    [self exportComposition:mutableComposition];
+}
 
+- (void)exportComposition:(AVMutableComposition *)composition {
+    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetHighestQuality];
+    
     NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
     NSString *cacheFile = [cachesPath stringByAppendingPathComponent:@"newfile.mov"];
     NSURL *outputURL = [NSURL fileURLWithPath:cacheFile];
     
+    // Remove old file
+    NSError *error;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager removeItemAtURL:outputURL error:&error];
+    
+    if (error)
+        NSLog(@"Error removing previous file: %@", error.localizedDescription);
+
     exporter.outputURL = outputURL;
     
     exporter.outputFileType = AVFileTypeMPEG4;
     exporter.shouldOptimizeForNetworkUse = NO;
     
-    NSLog(@"Exports: %@", [AVAssetExportSession exportPresetsCompatibleWithAsset:mutableComposition]);
+    NSLog(@"Exports: %@", [AVAssetExportSession exportPresetsCompatibleWithAsset:composition]);
     
     [exporter exportAsynchronouslyWithCompletionHandler:^{
         switch (exporter.status) {
@@ -95,11 +105,10 @@
             default:
                 break;
         }
-    
+        
         [self playFileWithURL:exporter.outputURL];
     }];
 }
-
 
 - (void)playFileWithURL:(NSURL *)url {
     NSLog(@"Playing file: %@", url);
