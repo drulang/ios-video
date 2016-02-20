@@ -44,7 +44,6 @@
     // Add tracks to the composition
     [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero error:nil];
     [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
-
     
     CMTimeValue durationAmount = videoAssetTrack.timeRange.duration.value;
     CMTime currentVideoTimeMark = videoAssetTrack.timeRange.duration;
@@ -63,14 +62,6 @@
     //
     // Export
     //
-    
-    static NSDateFormatter *kDateFormatter;
-    if (!kDateFormatter) {
-        kDateFormatter = [[NSDateFormatter alloc] init];
-        kDateFormatter.dateStyle = NSDateFormatterMediumStyle;
-        kDateFormatter.timeStyle = NSDateFormatterShortStyle;
-    }
-    
     [self exportComposition:mutableComposition];
 }
 
