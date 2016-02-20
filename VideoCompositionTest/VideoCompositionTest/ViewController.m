@@ -67,17 +67,9 @@
     //
     // Export
     //
-    
-    static NSDateFormatter *kDateFormatter;
-    if (!kDateFormatter) {
-        kDateFormatter = [[NSDateFormatter alloc] init];
-        kDateFormatter.dateStyle = NSDateFormatterMediumStyle;
-        kDateFormatter.timeStyle = NSDateFormatterShortStyle;
-    }
-    
     NSLog(@"Supported assets");
     NSLog(@"%@", [AVAssetExportSession exportPresetsCompatibleWithAsset:mutableComposition]);
-    
+
     AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:videoAsset presetName:AVAssetExportPresetHighestQuality];
     exporter.audioMix = mutableAudioMix;
 
