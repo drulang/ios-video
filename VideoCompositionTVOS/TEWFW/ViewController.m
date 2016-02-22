@@ -31,7 +31,7 @@
     AVMutableCompositionTrack *mutableCompositionVideoTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
     AVMutableCompositionTrack *mutableCompositionAudioTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
     
-    int numberOfLoops = 10;
+    int numberOfLoops = 5;
     int audioOffsetAmount = 200;
     
     // Assets
@@ -42,12 +42,13 @@
     AVAssetTrack *audioAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
 
     // Add tracks to the composition
-    [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero error:nil];
-    [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];
-    
     CMTimeValue durationAmount = videoAssetTrack.timeRange.duration.value;
     CMTime currentVideoTimeMark = videoAssetTrack.timeRange.duration;
+    currentVideoTimeMark.value = 0;
+
     CMTime currentAudioTimeMark = audioAssetTrack.timeRange.duration;
+    currentAudioTimeMark.value = 0;
+
     currentAudioTimeMark.value = currentAudioTimeMark.value - audioOffsetAmount;
 
     for (int i = 0; i < numberOfLoops; i++) {
