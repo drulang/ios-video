@@ -21,7 +21,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     // Do any additional setup after loading the view, typically from a nib.
-    NSString *fileName = [[NSBundle mainBundle] pathForResource:@"output" ofType:@"mp4"];
+    NSString *fileName = [[NSBundle mainBundle] pathForResource:@"bsunset" ofType:@"mp4"];
     NSURL *url = [NSURL fileURLWithPath:fileName];
     
     
@@ -29,10 +29,9 @@
     
     // Create the video composition track
     AVMutableCompositionTrack *mutableCompositionVideoTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
-    AVMutableCompositionTrack *mutableCompositionAudioTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
-    
+
     int numberOfLoops = 5;
-    int audioOffsetAmount = 200;
+    int audioOffsetAmount = 600;
     
     // Assets
     AVAsset *videoAsset = [AVAsset assetWithURL:url];
@@ -54,6 +53,9 @@
     for (int i = 0; i < numberOfLoops; i++) {
         NSLog(@"Inserted");
         [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:currentVideoTimeMark error:nil];
+        
+        // Create separate audio comp tracks
+        AVMutableCompositionTrack *mutableCompositionAudioTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
         [mutableCompositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioAssetTrack.timeRange.duration) ofTrack:audioAssetTrack atTime:currentAudioTimeMark error:nil];
 
         currentVideoTimeMark.value += durationAmount;

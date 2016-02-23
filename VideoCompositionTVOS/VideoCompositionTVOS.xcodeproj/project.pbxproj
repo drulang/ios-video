@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7121647F1C7BD53000BD62E4 /* campfire.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 7121647E1C7BD53000BD62E4 /* campfire.mp4 */; };
+		712164811C7BDE5E00BD62E4 /* bboat.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 712164801C7BDE5E00BD62E4 /* bboat.mp4 */; };
+		712164831C7BE42700BD62E4 /* bsunset.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 712164821C7BE42700BD62E4 /* bsunset.mp4 */; };
 		71AAB9A61C4D720800679E70 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AAB9A51C4D720800679E70 /* main.m */; };
 		71AAB9A91C4D720800679E70 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AAB9A81C4D720800679E70 /* AppDelegate.m */; };
 		71AAB9AC1C4D720800679E70 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AAB9AB1C4D720800679E70 /* ViewController.m */; };
@@ -17,6 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7121647E1C7BD53000BD62E4 /* campfire.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = campfire.mp4; sourceTree = "<group>"; };
+		712164801C7BDE5E00BD62E4 /* bboat.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bboat.mp4; sourceTree = "<group>"; };
+		712164821C7BE42700BD62E4 /* bsunset.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bsunset.mp4; sourceTree = "<group>"; };
 		71AAB9A11C4D720800679E70 /* VideoCompositionTVOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoCompositionTVOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AAB9A51C4D720800679E70 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		71AAB9A71C4D720800679E70 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -77,6 +83,9 @@
 		71AAB9A41C4D720800679E70 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				712164821C7BE42700BD62E4 /* bsunset.mp4 */,
+				712164801C7BDE5E00BD62E4 /* bboat.mp4 */,
+				7121647E1C7BD53000BD62E4 /* campfire.mp4 */,
 				71AAB9BA1C4D727400679E70 /* output.mp4 */,
 				71AAB9A51C4D720800679E70 /* main.m */,
 			);
@@ -140,8 +149,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				712164831C7BE42700BD62E4 /* bsunset.mp4 in Resources */,
+				712164811C7BDE5E00BD62E4 /* bboat.mp4 in Resources */,
 				71AAB9B11C4D720800679E70 /* Assets.xcassets in Resources */,
 				71AAB9BB1C4D727400679E70 /* output.mp4 in Resources */,
+				7121647F1C7BD53000BD62E4 /* campfire.mp4 in Resources */,
 				71AAB9AF1C4D720800679E70 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,6 +310,7 @@
 				71AAB9B71C4D720800679E70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
