@@ -69,8 +69,6 @@
     CMTime currentAudioTimeMark = audioAssetTrack.timeRange.duration;
     currentAudioTimeMark.value = 0;
 
-    currentAudioTimeMark.value = currentAudioTimeMark.value - audioOffsetAmount;
-
     for (int i = 0; i < numberOfLoops; i++) {
         NSLog(@"Inserted");
         [mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:currentVideoTimeMark error:nil];
