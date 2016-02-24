@@ -12,12 +12,33 @@
 
 @interface ViewController ()
 
+@property (nonatomic)AVQueuePlayer *player;
+
 @end
 
 @implementation ViewController
 
+#pragma mark Properties
+
+- (AVQueuePlayer *)player {
+    if (!_player) {
+        _player = [[AVQueuePlayer alloc] init];
+        
+        AVPlayerLayer *layer = [[AVPlayerLayer alloc] init];
+        layer.frame = self.view.frame;
+        layer.player = _player;
+        
+        [self.view.layer addSublayer:layer];
+    }
+    return _player;
+}
+
+#pragma mark Life cycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.player description];
+
     // Do any additional setup after loading the view, typically from a nib.
     
     // Do any additional setup after loading the view, typically from a nib.
@@ -106,20 +127,10 @@
 
 - (void)playFileWithURL:(NSURL *)url {
     NSLog(@"Playing file: %@", url);
+    AVPlayerItem *item = [[AVPlayerItem alloc] initWithURL:url];
+    [self.player insertItem:item afterItem:nil];
     
-    AVPlayer *player = [[AVPlayer alloc] initWithURL:url];
-    
-    AVPlayerLayer *layer = [[AVPlayerLayer alloc] init];
-    layer.frame = self.view.frame;
-    layer.player = player;
-    layer.borderColor = [UIColor redColor].CGColor;
-    layer.borderWidth = 5;
-    
-    [self.view.layer addSublayer:layer];
-    
-    [player play];
-    
-    
+    [self.player play];
 }
 
 @end
