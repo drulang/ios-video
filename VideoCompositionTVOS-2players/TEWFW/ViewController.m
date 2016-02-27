@@ -17,6 +17,8 @@
 @property (nonatomic)AVPlayer *player1;
 @property (nonatomic)AVPlayer *player2;
 
+@property (nonatomic)UIView *container1;
+@property (nonatomic)UIView *container2;
 @property (nonatomic)AVPlayerLayer *layer1;
 @property (nonatomic)AVPlayerLayer *layer2;
 
@@ -48,6 +50,22 @@
         _player2 = [[AVPlayer alloc] initWithURL:self.mediaURL];
     }
     return _player2;
+}
+
+- (UIView *)container1 {
+    if (!_container1) {
+        _container1 = [[UIView alloc] initWithFrame:self.view.frame];
+        [_container1.layer addSublayer:self.layer1];
+    }
+    return _container1;
+}
+
+- (UIView *)container2 {
+    if (!_container2) {
+        _container2 = [[UIView alloc] initWithFrame:self.view.frame];
+        [_container2.layer addSublayer:self.layer2];
+    }
+    return _container2;
 }
 
 - (AVPlayerLayer *)layer1 {
@@ -87,8 +105,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self.view.layer addSublayer:self.layer2];
-    [self.view.layer addSublayer:self.layer1];
+    [self.view addSubview:self.container2];
+    [self.view addSubview:self.container1];
 
 }
 
@@ -100,41 +118,32 @@
     CMTime assetTime = self.player1.currentItem.asset.duration;
     CGFloat totalSeconds = assetTime.value / (CGFloat)assetTime.timescale;
     
-    [NSTimer scheduledTimerWithTimeInterval:totalSeconds target:self selector:@selector(playerDidFinishPlaying:) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:totalSeconds target:self selector:@selector(switchPlayers:) userInfo:nil repeats:YES];
     
 }
 
 #pragma mark Notifications
 
-- (void)playerDidFinishPlaying:(NSNotification *)note {
+- (void)switchPlayers:(NSNotification *)note {
     
     if (self.activePlayer == self.player1) {
         NSLog(@"Switching to player 2 RED");
         self.activePlayer = self.player2;
         [self.activePlayer play];
 
-        [self bringSublayerToFront:self.layer2];
-        
+        [self.view bringSubviewToFront:self.container2];
         [self.player1 seekToTime:kCMTimeZero];
     } else {
         NSLog(@"Switching to player 1 GREEN");
         self.activePlayer = self.player1;
         [self.activePlayer play];
 
-        [self bringSublayerToFront:self.layer1];
+        [self.view bringSubviewToFront:self.container1];
         
         [self.player2 seekToTime:kCMTimeZero];
     }
 }
 
-- (void)bringSublayerToFront:(CALayer *)layer {
-    [CATransaction begin];
-    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-    CALayer *superlayer = layer.superlayer;
-    [layer removeFromSuperlayer];
-    [superlayer insertSublayer:layer atIndex:0];
-    [CATransaction commit];
-}
 
 
 @end
