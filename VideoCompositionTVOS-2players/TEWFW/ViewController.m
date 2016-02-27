@@ -20,6 +20,8 @@
 @property (nonatomic)AVPlayerLayer *layer1;
 @property (nonatomic)AVPlayerLayer *layer2;
 
+@property (nonatomic)AVPlayer *activePlayer;
+
 @end
 
 @implementation ViewController
@@ -66,6 +68,21 @@
     return _layer2;
 }
 
+- (void)setActivePlayer:(AVPlayer *)activePlayer {
+    _activePlayer = activePlayer;
+    [_activePlayer play];
+    
+    if (activePlayer == self.player1) {
+        self.layer1.hidden = NO;
+        self.layer2.hidden = YES;
+        [self.player2 seekToTime:kCMTimeZero];
+    } else {
+        self.layer1.hidden = YES;
+        self.layer2.hidden = NO;
+
+        [self.player1 seekToTime:kCMTimeZero];
+    }
+}
 
 #pragma mark Life cycle
 
@@ -75,21 +92,28 @@
     [self.view.layer addSublayer:self.layer1];
     [self.view.layer addSublayer:self.layer2];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.activePlayer = self.player1;
     
     [self.player1 play];
 }
 
-
 #pragma mark Notifications
 
-- (void)itemDidFinishPlaying:(NSNotification *)note {
-    NSLog(@"Finished playing: %@", note);
+- (void)playerDidFinishPlaying:(NSNotification *)note {
+    if (self.activePlayer == self.player1) {
+        NSLog(@"Switching to player 2");
+        self.activePlayer = self.player2;
+    } else {
+        NSLog(@"Switching to player 1");
+        self.activePlayer = self.player1;
+    }
 }
+
 
 @end
