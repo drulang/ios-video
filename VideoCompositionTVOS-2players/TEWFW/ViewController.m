@@ -117,6 +117,7 @@
     
     CMTime assetTime = self.player1.currentItem.asset.duration;
     CGFloat totalSeconds = assetTime.value / (CGFloat)assetTime.timescale;
+    totalSeconds -= .5;
     
     [NSTimer scheduledTimerWithTimeInterval:totalSeconds target:self selector:@selector(switchPlayers:) userInfo:nil repeats:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
@@ -125,8 +126,6 @@
 #pragma mark Notifications
 
 - (void)switchPlayers:(NSNotification *)note {
-    AVPlayer *previousPlayer = self.activePlayer;
-
     if (self.activePlayer == self.player1) {
         NSLog(@"Switching to player 2 RED");
         self.activePlayer = self.player2;
@@ -141,14 +140,18 @@
 
         [self.view bringSubviewToFront:self.container1];
     }
-    
-    [previousPlayer pause];
-    [previousPlayer seekToTime:kCMTimeZero];
-    
 }
 
 - (void)playerDidFinishPlaying:(NSNotification *)note {
     NSLog(@"Finished playing");
+    
+    if (((AVPlayerItem *)note.object) == self.player1.currentItem) {
+        [self.player1 pause];
+        [self.player1 seekToTime:kCMTimeZero];
+    } else {
+        [self.player2 pause];
+        [self.player2 seekToTime:kCMTimeZero];
+    }
 }
 
 @end
