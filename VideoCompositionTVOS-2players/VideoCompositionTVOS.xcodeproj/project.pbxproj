@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		710DD22A1C825CE8005AB9A3 /* MountainWaterfall.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 710DD2291C825CE8005AB9A3 /* MountainWaterfall.mp4 */; };
+		710DD22C1C825E8A005AB9A3 /* BeachSunset.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 710DD22B1C825E8A005AB9A3 /* BeachSunset.mp4 */; };
 		71AAB9A61C4D720800679E70 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AAB9A51C4D720800679E70 /* main.m */; };
 		71AAB9A91C4D720800679E70 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AAB9A81C4D720800679E70 /* AppDelegate.m */; };
 		71AAB9AC1C4D720800679E70 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AAB9AB1C4D720800679E70 /* ViewController.m */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		710DD2291C825CE8005AB9A3 /* MountainWaterfall.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = MountainWaterfall.mp4; sourceTree = "<group>"; };
+		710DD22B1C825E8A005AB9A3 /* BeachSunset.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = BeachSunset.mp4; sourceTree = "<group>"; };
 		71AAB9A11C4D720800679E70 /* VideoCompositionTVOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoCompositionTVOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71AAB9A51C4D720800679E70 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		71AAB9A71C4D720800679E70 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 		71AAB9A41C4D720800679E70 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				710DD22B1C825E8A005AB9A3 /* BeachSunset.mp4 */,
+				710DD2291C825CE8005AB9A3 /* MountainWaterfall.mp4 */,
 				71F71C611C81E8F00064B65C /* JungleWaterfall.mp4 */,
 				71AAB9BA1C4D727400679E70 /* output.mp4 */,
 				71AAB9A51C4D720800679E70 /* main.m */,
@@ -146,7 +152,9 @@
 				71AAB9B11C4D720800679E70 /* Assets.xcassets in Resources */,
 				71F71C621C81E8F00064B65C /* JungleWaterfall.mp4 in Resources */,
 				71AAB9BB1C4D727400679E70 /* output.mp4 in Resources */,
+				710DD22A1C825CE8005AB9A3 /* MountainWaterfall.mp4 in Resources */,
 				71AAB9AF1C4D720800679E70 /* Main.storyboard in Resources */,
+				710DD22C1C825E8A005AB9A3 /* BeachSunset.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

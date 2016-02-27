@@ -24,15 +24,19 @@
 
 @property (nonatomic)AVPlayer *activePlayer;
 
+@property (nonatomic)UIImageView *bgImageView;
+
 @end
 
 @implementation ViewController
+
+static NSString *movieName = @"JungleWaterfall";
 
 #pragma mark Properties
 
 - (NSURL *)mediaURL {
     if (!_mediaURL) {
-        NSString *fileName = [[NSBundle mainBundle] pathForResource:@"JungleWaterfall" ofType:@"mp4"];
+        NSString *fileName = [[NSBundle mainBundle] pathForResource:movieName ofType:@"mp4"];
         _mediaURL = [NSURL fileURLWithPath:fileName];
     }
     return _mediaURL;
@@ -100,11 +104,20 @@
     return _layer2;
 }
 
+- (UIImageView *)bgImageView {
+    if (!_bgImageView) {
+        _bgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:movieName]];
+        _bgImageView.frame = self.view.frame;
+    }
+    return _bgImageView;
+}
+
 #pragma mark Life cycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self.view addSubview:self.bgImageView];
     [self.view addSubview:self.container2];
     [self.view addSubview:self.container1];
 
@@ -117,7 +130,7 @@
     
     CMTime assetTime = self.player1.currentItem.asset.duration;
     CGFloat totalSeconds = assetTime.value / (CGFloat)assetTime.timescale;
-    totalSeconds -= .5;
+    totalSeconds -= 1;
     
     [NSTimer scheduledTimerWithTimeInterval:totalSeconds target:self selector:@selector(switchPlayers:) userInfo:nil repeats:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
@@ -125,20 +138,37 @@
 
 #pragma mark Notifications
 
+static CGFloat animationDuration = 1;
+
 - (void)switchPlayers:(NSNotification *)note {
     if (self.activePlayer == self.player1) {
         NSLog(@"Switching to player 2 RED");
         self.activePlayer = self.player2;
         [self.activePlayer play];
 
-        [self.view bringSubviewToFront:self.container2];
+        
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.container1.alpha = 0;
+        }];
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.container2.alpha = 1;
+        }];
+        
+        //[self.view bringSubviewToFront:self.container2];
 
     } else {
         NSLog(@"Switching to player 1 GREEN");
         self.activePlayer = self.player1;
         [self.activePlayer play];
-
-        [self.view bringSubviewToFront:self.container1];
+        
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.container1.alpha = 1;
+        }];
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.container2.alpha = 0;
+        }];
+        
+        //[self.view bringSubviewToFront:self.container1];
     }
 }
 
