@@ -30,7 +30,7 @@
 
 - (NSURL *)mediaURL {
     if (!_mediaURL) {
-        NSString *fileName = [[NSBundle mainBundle] pathForResource:@"output" ofType:@"mp4"];
+        NSString *fileName = [[NSBundle mainBundle] pathForResource:@"JungleWaterfall" ofType:@"mp4"];
         _mediaURL = [NSURL fileURLWithPath:fileName];
     }
     return _mediaURL;
@@ -55,6 +55,13 @@
         _layer1 = [[AVPlayerLayer alloc] init];
         _layer1.frame = self.view.frame;
         _layer1.player = self.player1;
+        
+        CAShapeLayer *shape = [CAShapeLayer layer];
+        shape.lineWidth = 1;
+        shape.fillColor = [UIColor greenColor].CGColor;
+        shape.path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100, 100, 50, 50)].CGPath;
+        
+        [_layer1 addSublayer:shape];
     }
     return _layer1;
 }
@@ -64,24 +71,15 @@
         _layer2 = [[AVPlayerLayer alloc] init];
         _layer2.frame = self.view.frame;
         _layer2.player = self.player2;
+        
+        CAShapeLayer *shape = [CAShapeLayer layer];
+        shape.lineWidth = 1;
+        shape.fillColor = [UIColor redColor].CGColor;
+        shape.path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100, 100, 50, 50)].CGPath;
+        
+        [_layer2 addSublayer:shape];
     }
     return _layer2;
-}
-
-- (void)setActivePlayer:(AVPlayer *)activePlayer {
-    _activePlayer = activePlayer;
-    [_activePlayer play];
-    
-    if (activePlayer == self.player1) {
-        self.layer1.hidden = NO;
-        self.layer2.hidden = YES;
-        [self.player2 seekToTime:kCMTimeZero];
-    } else {
-        self.layer1.hidden = YES;
-        self.layer2.hidden = NO;
-
-        [self.player1 seekToTime:kCMTimeZero];
-    }
 }
 
 #pragma mark Life cycle
@@ -89,30 +87,53 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self.view.layer addSublayer:self.layer1];
     [self.view.layer addSublayer:self.layer2];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    [self.view.layer addSublayer:self.layer1];
 
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     self.activePlayer = self.player1;
+    [self.activePlayer play];
     
-    [self.player1 play];
+    CMTime assetTime = self.player1.currentItem.asset.duration;
+    CGFloat totalSeconds = assetTime.value / (CGFloat)assetTime.timescale;
+    
+    [NSTimer scheduledTimerWithTimeInterval:totalSeconds target:self selector:@selector(playerDidFinishPlaying:) userInfo:nil repeats:YES];
+    
 }
 
 #pragma mark Notifications
 
 - (void)playerDidFinishPlaying:(NSNotification *)note {
+    
     if (self.activePlayer == self.player1) {
-        NSLog(@"Switching to player 2");
+        NSLog(@"Switching to player 2 RED");
         self.activePlayer = self.player2;
+        [self.activePlayer play];
+
+        [self bringSublayerToFront:self.layer2];
+        
+        [self.player1 seekToTime:kCMTimeZero];
     } else {
-        NSLog(@"Switching to player 1");
+        NSLog(@"Switching to player 1 GREEN");
         self.activePlayer = self.player1;
+        [self.activePlayer play];
+
+        [self bringSublayerToFront:self.layer1];
+        
+        [self.player2 seekToTime:kCMTimeZero];
     }
+}
+
+- (void)bringSublayerToFront:(CALayer *)layer {
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    CALayer *superlayer = layer.superlayer;
+    [layer removeFromSuperlayer];
+    [superlayer insertSublayer:layer atIndex:0];
+    [CATransaction commit];
 }
 
 
